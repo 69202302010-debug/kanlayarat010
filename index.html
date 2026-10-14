@@ -126,14 +126,14 @@
                         <!-- Decorative Backdrop Glow -->
                         <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-sky-500/30 to-indigo-500/30 blur-xl opacity-70"></div>
                         
-                        <!-- Profile Card Container (Styled to match screenshot) -->
+                        <!-- Profile Card Container -->
                         <div class="relative w-full h-full rounded-3xl bg-slate-900/90 dark:bg-slate-900/90 p-5 border border-slate-700/60 shadow-[0_0_40px_rgba(56,189,248,0.2)] backdrop-blur-md flex flex-col items-center justify-center text-center group">
                             <div class="relative w-40 h-40 sm:w-48 sm:h-48 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden mb-4 border border-slate-700 shadow-lg group/avatar">
                                 <img id="profile-img" 
-                                     src="profile.jpg" 
+                                     src="https://raw.githubusercontent.com/69202302010-debug/kanlayarat010/main/IMG_5531.jpeg" 
                                      alt="กัลยรัตน์ ค้อชากุล (น้ำฝน)" 
                                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
-                                     onerror="if (this.src.indexOf('image.png') === -1) { this.src='image.png'; } else { this.src='https://placehold.co/300x300/0284c7/ffffff?text=Namfon'; }">
+                                     onerror="this.onerror=null; this.src='https://placehold.co/300x300/0284c7/ffffff?text=Namfon';">
                                 <!-- Upload Overlay Button -->
                                 <button onclick="openGitHubModal()" class="absolute inset-0 bg-slate-900/60 text-white opacity-0 group-hover/avatar:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 text-xs font-medium" title="เปลี่ยนรูปโปรไฟล์">
                                     <i class="fa-solid fa-camera text-xl"></i>
@@ -360,7 +360,7 @@
 
             <div class="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center gap-4">
-                    <img id="contact-avatar-img" src="https://github.com/github.png" alt="Profile" class="w-12 h-12 rounded-xl object-cover border border-sky-500/30 shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=NF';">
+                    <img id="contact-avatar-img" src="https://raw.githubusercontent.com/69202302010-debug/kanlayarat010/main/IMG_5531.jpeg" alt="Profile" class="w-12 h-12 rounded-xl object-cover border border-sky-500/30 shrink-0" onerror="this.onerror=null; this.src='https://placehold.co/100x100/0284c7/ffffff?text=NF';">
                     <div>
                         <p class="text-xs text-slate-500 dark:text-slate-400">ชื่อผู้ติดต่อ</p>
                         <p class="text-sm font-bold text-slate-900 dark:text-white">นางสาวกัลยรัตน์ ค้อชากุล (น้ำฝน)</p>
@@ -373,8 +373,8 @@
                     </div>
                     <div class="overflow-hidden">
                         <p class="text-xs text-slate-500 dark:text-slate-400">GitHub Profile</p>
-                        <a id="github-link" href="https://github.com" target="_blank" class="text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline truncate block">
-                            <span id="github-username-text">คลิกเพื่อตั้งค่า</span>
+                        <a id="github-link" href="https://github.com/69202302010-debug/kanlayarat010" target="_blank" class="text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline truncate block">
+                            <span id="github-username-text">@69202302010-debug</span>
                         </a>
                     </div>
                 </div>
@@ -541,6 +541,40 @@
             modal.classList.remove('flex');
         }
 
+        function openGitHubModal() {
+            const modal = document.getElementById('github-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeGitHubModal() {
+            const modal = document.getElementById('github-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function saveGitHubUsername() {
+            const input = document.getElementById('github-username-input');
+            if (input && input.value.trim() !== '') {
+                const username = input.value.trim();
+                localStorage.setItem('github_username', username);
+                const ghLink = document.getElementById('github-link');
+                const ghText = document.getElementById('github-username-text');
+                if (ghLink && ghText) {
+                    ghLink.href = `https://github.com/${username}`;
+                    ghText.innerText = `@${username}`;
+                }
+                const userAvatar = `https://github.com/${username}.png`;
+                localStorage.setItem('profile_image_src', userAvatar);
+                updateProfileImages(userAvatar);
+                closeGitHubModal();
+            }
+        }
+
         function updateProfileImages(imgSrc) {
             document.getElementById('profile-img').src = imgSrc;
             document.getElementById('contact-avatar-img').src = imgSrc;
@@ -548,21 +582,37 @@
 
         // Initialize Profile Picture on page load
         window.addEventListener('DOMContentLoaded', () => {
+            const defaultImg = 'https://raw.githubusercontent.com/69202302010-debug/kanlayarat010/main/IMG_5531.jpeg';
             const savedImageSrc = localStorage.getItem('profile_image_src');
             if (savedImageSrc) {
                 updateProfileImages(savedImageSrc);
             } else {
-                // Default to local profile image file
-                updateProfileImages('profile.jpg');
+                updateProfileImages(defaultImg);
             }
-            const savedUser = localStorage.getItem('github_username');
-            if (savedUser) {
-                const ghLink = document.getElementById('github-link');
-                const ghText = document.getElementById('github-username-text');
-                if (ghLink && ghText) {
-                    ghLink.href = `https://github.com/${savedUser}`;
-                    ghText.innerText = `@${savedUser}`;
-                }
+            const savedUser = localStorage.getItem('github_username') || '69202302010-debug';
+            const ghLink = document.getElementById('github-link');
+            const ghText = document.getElementById('github-username-text');
+            if (ghLink && ghText) {
+                ghLink.href = `https://github.com/${savedUser}`;
+                ghText.innerText = `@${savedUser}`;
+            }
+
+            // File input handler for selecting image from device
+            const fileInput = document.getElementById('profile-file-input');
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(evt) {
+                            const base64Img = evt.target.result;
+                            localStorage.setItem('profile_image_src', base64Img);
+                            updateProfileImages(base64Img);
+                            closeGitHubModal();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
         });
     </script>
